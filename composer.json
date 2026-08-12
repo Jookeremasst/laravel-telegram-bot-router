@@ -1,0 +1,37 @@
+{
+    "name": "reyhanteam/laravel-telegram-bot-router",
+    "description": "A Telegram bot routing system for Laravel.",
+    "type": "library",
+    "license": "MIT",
+
+    "homepage": "https://github.com/ReyhanTeam/laravel-telegram-bot-router",
+    "repository": "https://github.com/ReyhanTeam/laravel-telegram-bot-router",
+
+    "authors": [
+        {
+            "name": "ReyhanTeam",
+            "homepage": "https://github.com/ReyhanTeam"
+        }
+    ],
+
+    "require": {
+        "php": "^8.1",
+        "illuminate/support": "^13.0",
+        "illuminate/routing": "^13.0",
+        "illuminate/console": "^13.0"
+    },
+
+    "autoload": {
+        "psr-4": {
+            "ReyhanTeam\\TelegramBotRouter\\": "src/"
+        }
+    },
+
+    "extra": {
+        "laravel": {
+            "providers": [
+                "ReyhanTeam\\TelegramBotRouter\\TelegramRouterServiceProvider"
+            ]
+        }
+    }
+}
