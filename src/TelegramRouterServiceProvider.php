@@ -14,7 +14,7 @@ class TelegramRouterServiceProvider extends ServiceProvider
     {
         // Merge package config with application config
         $this->mergeConfigFrom(
-            __DIR__ . '/config/telegram-bot.php',
+            __DIR__ . '/config/telegram-bot-router.php',
             'telegram-bot'
         );
 
@@ -82,7 +82,7 @@ class TelegramRouterServiceProvider extends ServiceProvider
     {
         // Publish configuration file
         $this->publishes([
-            __DIR__ . '/config/telegram-bot.php' => config_path('telegram-bot.php'),
+            __DIR__ . '/config/telegram-bot-router.php' => config_path('telegram-bot-router.php'),
         ], 'telegram-bot-config');
 
         // Publish bot routes

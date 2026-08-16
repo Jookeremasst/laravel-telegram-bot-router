@@ -1,36 +1,39 @@
 <?php
 
+
 namespace ReyhanTeam\TelegramBotRouter\Console;
 
 use Illuminate\Console\Command;
-use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Route;
+use ReyhanTeam\TelegramBotRouter\Core\UpdateManager;
 
 class SetPostRouteCommand extends Command
 {
-    protected $signature = 'reyhan:set-post-route';
+    protected $signature = 'reyhan:setWebhookRoute';
 
-    protected $description = 'Add Telegram webhook POST route to routes/web.php';
+    protected $description = 'Register Telegram webhook route from configuration';
 
-    public function handle()
+    public function handle(): int
     {
-        $webPath = base_path('routes/web.php');
+        $path = config('telegram-bot-router.webhook.path');
 
-        if (!File::exists($webPath)) {
-            $this->error('routes/web.php not found.');
-            return;
+        if (empty($path)) {
+            $this->error('Telegram webhook path is not configured.');
+
+            return self::FAILURE;
         }
 
-        $route = "\n\nRoute::post('/telegram/webhook', [\\ReyhanTeam\\TelegramBotRouter\\Core\\UpdateManager::class, 'handleWebhook'])->withoutMiddleware([Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])->name('telegram.webhook');\n";
+        // حذف اسلش اضافه از ابتدا
+        $path = '/' . ltrim($path, '/');
 
-        $content = File::get($webPath);
+        Route::post(
+            $path,
+            [UpdateManager::class, 'handleWebhook']
+        );
 
-        if (str_contains($content, 'telegram.webhook')) {
-            $this->warn('Telegram webhook route already exists.');
-            return;
-        }
+        $this->info("Telegram webhook route registered:");
+        $this->line("POST {$path}");
 
-        File::append($webPath, $route);
-
-        $this->info('Telegram webhook route added to routes/web.php ✅');
+        return self::SUCCESS;
     }
 }
