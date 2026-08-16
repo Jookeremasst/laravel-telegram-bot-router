@@ -38,6 +38,12 @@ class TelegramRouterServiceProvider extends ServiceProvider
     public function boot(): void
     {
         $this->loadBotRoutes();
+        if (config('telegram-bot-router.mode') === 'webhook') {
+        Route::post(
+            config('telegram-bot.webhook.path'),
+            [UpdateManager::class, 'handleWebhook']
+        );
+    }
 
         if ($this->app->runningInConsole()) {
             $this->registerCommands();
@@ -90,5 +96,5 @@ class TelegramRouterServiceProvider extends ServiceProvider
             __DIR__ . '/../routes/bot.php' => base_path('routes/bot.php'),
         ], 'telegram-bot-routes');
     }
-    
+
 }
