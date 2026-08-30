@@ -10,11 +10,28 @@ class StartPollingCommand extends Command
     protected $signature = 'reyhan:start-polling';
     protected $description = 'Start Telegram bot polling loop';
 
-    public function handle()
+    public function handle(): int
     {
-        $this->info("Polling started... (Ctrl+C to stop)");
+        $mode = config('telegram-bot.mode');
+
+        if ($mode !== 'polling') {
+            $this->newLine();
+            $this->error('Cannot start polling.');
+            $this->line("Current Telegram bot mode: <fg=yellow>{$mode}</>");
+            $this->line('Polling requires the mode to be set to <fg=green>polling</>.');
+            $this->newLine();
+            $this->line('Change this value in <fg=cyan>config/telegram-bot.php</>:');
+            $this->line("  'mode' => 'polling',");
+            $this->newLine();
+
+            return self::FAILURE;
+        }
+
+        $this->info('Polling started... (Ctrl+C to stop)');
 
         $manager = new UpdateManager();
         $manager->startPolling();
+
+        return self::SUCCESS;
     }
 }
